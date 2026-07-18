@@ -231,9 +231,16 @@ function Explore() {
         <Link
           to="/diff"
           search={{}}
-          style={{ color: "#0ea5e9", fontSize: 12, display: "block", marginBottom: 12 }}
+          style={{ color: "#0ea5e9", fontSize: 12, display: "block", marginBottom: 4 }}
         >
           Version diff →
+        </Link>
+        <Link
+          to="/flows"
+          search={{ v: search.v }}
+          style={{ color: "#0ea5e9", fontSize: 12, display: "block", marginBottom: 12 }}
+        >
+          Message flows →
         </Link>
 
         <label style={{ fontSize: 12, color: "#94a3b8", display: "block", marginBottom: 16 }}>
