@@ -1,4 +1,4 @@
-import { defineConfig } from "vitest/config";
+import { defineConfig } from "vite-plus";
 
 // Standalone test config so Vitest does not load the app's vite.config.ts (whose
 // Cloudflare Worker plugin conflicts with Vitest's SSR environment). The pipeline

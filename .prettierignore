@@ -1,5 +1,0 @@
-# upstream schema snapshots — kept verbatim for drift detection, never reformatted
-src/pipeline/schemas/
-# generated pipeline output and route tree
-src/data/
-src/routeTree.gen.ts

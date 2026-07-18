@@ -10,7 +10,7 @@
 import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 import { buildIr } from "./ir/build.ts";
 import { buildInventory } from "./ir/inventory.ts";
 import { buildVersion, orderVersions } from "./build.ts";
