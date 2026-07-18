@@ -224,9 +224,16 @@ function Explore() {
         <Link
           to="/capabilities"
           search={{ v: search.v }}
-          style={{ color: "#0ea5e9", fontSize: 12, display: "inline-block", marginBottom: 12 }}
+          style={{ color: "#0ea5e9", fontSize: 12, display: "block", marginBottom: 4 }}
         >
           Capabilities matrix →
+        </Link>
+        <Link
+          to="/diff"
+          search={{}}
+          style={{ color: "#0ea5e9", fontSize: 12, display: "block", marginBottom: 12 }}
+        >
+          Version diff →
         </Link>
 
         <label style={{ fontSize: 12, color: "#94a3b8", display: "block", marginBottom: 16 }}>
