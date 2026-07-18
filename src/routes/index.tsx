@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -14,7 +14,7 @@ function Home() {
         MCP schema so they can&rsquo;t drift.
       </p>
       <p>
-        <small>Under construction.</small>
+        <Link to="/explore">Open the type explorer →</Link>
       </p>
     </main>
   );

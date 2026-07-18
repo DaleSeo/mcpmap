@@ -25,8 +25,12 @@ export default defineConfig({
     },
     ignorePatterns: ["src/routeTree.gen.ts", "dist", ".output", "src/data"],
     options: {
+      // Keep type-aware lint *rules* (e.g. no-unsafe-type-assertion) …
       typeAware: true,
-      typeCheck: true,
+      // … but not full type checking. Types are owned by the `typecheck` script
+      // (`tsc --noEmit`), which honors this project's `skipLibCheck`; tsgolint
+      // does not, so it flags the deliberate DOM × @types/bun global overlap.
+      typeCheck: false,
     },
     jsPlugins: [
       {
