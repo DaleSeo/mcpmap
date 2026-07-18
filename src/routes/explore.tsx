@@ -15,10 +15,28 @@ import {
 import "@xyflow/react/dist/style.css";
 import { areaSubgraph, neighborhood, type GraphNode } from "../lib/graph.ts";
 import { layout, NODE_HEIGHT, NODE_WIDTH } from "../lib/layout.ts";
-import { DEFAULT_VERSION, loadArtifact } from "../lib/data.ts";
+import { DEFAULT_VERSION, isVersion, loadArtifact, VERSIONS } from "../lib/data.ts";
+
+/**
+ * Every view coordinate lives in the URL: version, selected feature area, and
+ * focused type. That makes any view — a version's tools area, one type's
+ * neighborhood — a shareable link, and it's what drives the loader.
+ */
+interface ExploreSearch {
+  /** Absent means the default version, keeping the canonical URL clean (`/explore`). */
+  v?: string;
+  area?: string;
+  type?: string;
+}
 
 export const Route = createFileRoute("/explore")({
-  loader: () => loadArtifact(DEFAULT_VERSION),
+  validateSearch: (search: Record<string, unknown>): ExploreSearch => ({
+    v: typeof search.v === "string" && isVersion(search.v) ? search.v : undefined,
+    area: typeof search.area === "string" ? search.area : undefined,
+    type: typeof search.type === "string" ? search.type : undefined,
+  }),
+  loaderDeps: ({ search }) => ({ v: search.v ?? DEFAULT_VERSION }),
+  loader: ({ deps }) => loadArtifact(deps.v),
   component: Explore,
 });
 
@@ -126,10 +144,29 @@ function GraphCanvas({
 
 function Explore() {
   const artifact = Route.useLoaderData();
+  const search = Route.useSearch();
+  const navigate = Route.useNavigate();
 
-  // Default to the first non-empty area the clustering produced.
-  const [area, setArea] = useState(() => artifact.clusters[0]?.area ?? "common");
-  const [focus, setFocus] = useState<string | null>(null);
+  // View state is derived from the URL, validated against the loaded version so
+  // a stale link (an area or type absent from this version) degrades to the
+  // default area rather than an empty canvas.
+  const fallbackArea = artifact.clusters[0]?.area ?? "common";
+  const area =
+    search.area && artifact.clusters.some((c) => c.area === search.area)
+      ? search.area
+      : fallbackArea;
+  const focus =
+    search.type && artifact.types.some((t) => t.name === search.type) ? search.type : null;
+
+  const setVersion = (v: string) =>
+    // Drop the param for the default version so its URL stays canonical.
+    void navigate({
+      search: (s) => ({ ...s, v: v === DEFAULT_VERSION ? undefined : v, type: undefined }),
+    });
+  const setArea = (a: string) =>
+    void navigate({ search: (s) => ({ ...s, area: a, type: undefined }) });
+  const setFocus = (type: string) => void navigate({ search: (s) => ({ ...s, type }) });
+  const clearFocus = () => void navigate({ search: (s) => ({ ...s, type: undefined }) });
 
   // The bounded view: a type's neighborhood when one is focused, else the area
   // subgraph. Focusing crosses areas; picking an area clears the focus.
@@ -192,15 +229,38 @@ function Explore() {
         }}
       >
         <h1 style={{ fontSize: 16, margin: "0 0 4px" }}>mcpmap</h1>
-        <p style={{ fontSize: 12, color: "#94a3b8", margin: "0 0 16px" }}>
-          Type explorer · {artifact.version}
-        </p>
+        <p style={{ fontSize: 12, color: "#94a3b8", margin: "0 0 12px" }}>Type explorer</p>
+
+        <label style={{ fontSize: 12, color: "#94a3b8", display: "block", marginBottom: 16 }}>
+          Spec version
+          <select
+            value={artifact.version}
+            onChange={(e) => setVersion(e.target.value)}
+            style={{
+              display: "block",
+              width: "100%",
+              marginTop: 4,
+              padding: "6px 8px",
+              fontSize: 13,
+              borderRadius: 6,
+              border: "1px solid #1e293b",
+              background: "#0b1120",
+              color: "#e2e8f0",
+            }}
+          >
+            {VERSIONS.map((v) => (
+              <option key={v} value={v}>
+                {v}
+              </option>
+            ))}
+          </select>
+        </label>
 
         {focus ? (
           <div style={{ marginBottom: 16 }}>
             <div style={{ fontSize: 12, color: "#94a3b8" }}>Focused</div>
             <div style={{ fontWeight: 600, marginBottom: 8 }}>{focus}</div>
-            <button onClick={() => setFocus(null)} style={buttonStyle(true)}>
+            <button onClick={clearFocus} style={buttonStyle(true)}>
               ← Back to area
             </button>
           </div>
@@ -222,10 +282,7 @@ function Explore() {
           return (
             <button
               key={c.area}
-              onClick={() => {
-                setFocus(null);
-                setArea(c.area);
-              }}
+              onClick={() => setArea(c.area)}
               style={{ ...buttonStyle(active), borderLeft: `3px solid ${areaColor(c.area)}` }}
             >
               <span>{c.label}</span>
