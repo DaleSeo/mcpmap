@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   Background,
@@ -17,6 +17,7 @@ import { areaSubgraph, neighborhood, type GraphNode } from "../lib/graph.ts";
 import { layout, NODE_HEIGHT, NODE_WIDTH } from "../lib/layout.ts";
 import { DEFAULT_VERSION, isVersion, loadArtifact, VERSIONS } from "../lib/data.ts";
 import { methodForType } from "../lib/methods.ts";
+import { areaColor } from "../lib/areas.ts";
 import { TypeDetail } from "../components/TypeDetail.tsx";
 
 /**
@@ -41,25 +42,6 @@ export const Route = createFileRoute("/explore")({
   loader: ({ deps }) => loadArtifact(deps.v),
   component: Explore,
 });
-
-/** One stable hue per feature area, so a type keeps its color across views. */
-const AREA_COLOR: Record<string, string> = {
-  lifecycle: "#6366f1",
-  tools: "#0ea5e9",
-  resources: "#10b981",
-  prompts: "#f59e0b",
-  sampling: "#ec4899",
-  elicitation: "#8b5cf6",
-  roots: "#14b8a6",
-  logging: "#64748b",
-  completion: "#f43f5e",
-  tasks: "#eab308",
-  progress: "#22c55e",
-  common: "#94a3b8",
-};
-
-const COMMON_COLOR = "#94a3b8";
-const areaColor = (area: string): string => AREA_COLOR[area] ?? COMMON_COLOR;
 
 // React Flow requires node data to be an index-signature record.
 type TypeNodeData = GraphNode & { focused: boolean; [key: string]: unknown };
@@ -238,7 +220,14 @@ function Explore() {
         }}
       >
         <h1 style={{ fontSize: 16, margin: "0 0 4px" }}>mcpmap</h1>
-        <p style={{ fontSize: 12, color: "#94a3b8", margin: "0 0 12px" }}>Type explorer</p>
+        <p style={{ fontSize: 12, color: "#94a3b8", margin: "0 0 8px" }}>Type explorer</p>
+        <Link
+          to="/capabilities"
+          search={{ v: search.v }}
+          style={{ color: "#0ea5e9", fontSize: 12, display: "inline-block", marginBottom: 12 }}
+        >
+          Capabilities matrix →
+        </Link>
 
         <label style={{ fontSize: 12, color: "#94a3b8", display: "block", marginBottom: 16 }}>
           Spec version
