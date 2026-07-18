@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import { cloudflare } from "@cloudflare/vite-plugin";
 import viteReact from "@vitejs/plugin-react";
 
 export default defineConfig({
@@ -10,8 +11,11 @@ export default defineConfig({
     tsconfigPaths: true,
   },
   plugins: [
+    // Cloudflare Workers runtime target. v1 prerenders every page to static HTML,
+    // so the worker is only a fallback — but keeping it wired means a future
+    // dynamic route (e.g. on-demand version-pair diffs) is not a rewrite.
+    cloudflare({ viteEnvironment: { name: "ssr" } }),
     tanstackStart({
-      // Prerender the whole site to static HTML — v1 ships no server code.
       prerender: {
         enabled: true,
         crawlLinks: true,

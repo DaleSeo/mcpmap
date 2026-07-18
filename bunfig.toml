@@ -1,0 +1,4 @@
+# sharp is pulled transitively (image optimization we don't use) and fails its
+# from-source native build; nothing in this project needs a lifecycle script.
+[install]
+ignoreScripts = true
