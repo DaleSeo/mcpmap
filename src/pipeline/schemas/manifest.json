@@ -1,0 +1,31 @@
+{
+  "commit": "26897cc322f356487da89113451bd16b520b9288",
+  "fetchedAt": "2026-07-18T13:30:11.731Z",
+  "versions": [
+    {
+      "version": "2024-11-05",
+      "path": "schema/2024-11-05/schema.json",
+      "sha256": "5eb622319629169b8bb78b9e4c647fbd1ae758626a08837faa632b6a5fffa93b"
+    },
+    {
+      "version": "2025-03-26",
+      "path": "schema/2025-03-26/schema.json",
+      "sha256": "a266c1886a39d24ac4a468bf0b3c67b08bac4bc4f911f0a619834c3f5a250de7"
+    },
+    {
+      "version": "2025-06-18",
+      "path": "schema/2025-06-18/schema.json",
+      "sha256": "0da331735b91eab8bc2226bc1401fd11c5aa8944e4c35668c8910fb1c3edb9a7"
+    },
+    {
+      "version": "2025-11-25",
+      "path": "schema/2025-11-25/schema.json",
+      "sha256": "fa21f0c631eeb6aca05f15a29973785e222018b64f0be90108f00654aca0c384"
+    },
+    {
+      "version": "draft",
+      "path": "schema/draft/schema.json",
+      "sha256": "9774477d8d0fbd5a45f13b8a200749cdb536426112d5f671fc2736b7a314b20b"
+    }
+  ]
+}
