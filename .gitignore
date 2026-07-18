@@ -1,0 +1,7 @@
+# private working docs — never committed
+_my/
+
+.playwright-mcp/
+node_modules/
+dist/
+.DS_Store
