@@ -12,8 +12,9 @@
 
 import type { VersionArtifact } from "../pipeline/artifact.ts";
 import type { MethodEntry } from "../pipeline/ir/inventory.ts";
-import type { TypeNode, TypeRef } from "../pipeline/ir/types.ts";
+import type { TypeRef } from "../pipeline/ir/types.ts";
 import { formatType, objectFields } from "./typeref.ts";
+import { effectiveParams, effectiveResult, resolver, type Resolve } from "./wire.ts";
 
 export type ChangeKind = "added" | "removed" | "changed" | "unchanged";
 
@@ -60,40 +61,6 @@ export interface VersionDiff {
   methods: MethodDiff[];
   capabilities: CapabilityDiff[];
   reorganizations: Reorganization[];
-}
-
-type Resolve = (name: string) => TypeNode | undefined;
-
-function resolver(artifact: VersionArtifact): Resolve {
-  const index = new Map(artifact.types.map((t) => [t.name, t]));
-  return (name) => index.get(name);
-}
-
-/**
- * The effective params object of a method: the `params` field of its request
- * type, resolved through a `$ref` when the version names it. `undefined` when
- * the method takes no params.
- */
-function effectiveParams(
-  artifact: VersionArtifact,
-  method: MethodEntry,
-  resolve: Resolve,
-): TypeRef | undefined {
-  const request = resolve(method.typeName);
-  if (!request || request.shape.kind !== "object") return undefined;
-  const params = request.shape.fields.find((f) => f.name === "params");
-  if (!params) return undefined;
-  return params.type.kind === "ref" ? resolve(params.type.name)?.shape : params.type;
-}
-
-/** The effective result object of a request method, resolved from its result type. */
-function effectiveResult(
-  artifact: VersionArtifact,
-  method: MethodEntry,
-  resolve: Resolve,
-): TypeRef | undefined {
-  if (!method.resultType) return undefined;
-  return resolve(method.resultType)?.shape;
 }
 
 const MAX_DEPTH = 6;
@@ -232,15 +199,15 @@ function diffMethods(before: VersionArtifact, after: VersionArtifact): MethodDif
     }
     // both present
     const params = diffShape(
-      effectiveParams(before, b!, bResolve),
+      effectiveParams(b!, bResolve),
       bResolve,
-      effectiveParams(after, a!, aResolve),
+      effectiveParams(a!, aResolve),
       aResolve,
     );
     const result = diffShape(
-      effectiveResult(before, b!, bResolve),
+      effectiveResult(b!, bResolve),
       bResolve,
-      effectiveResult(after, a!, aResolve),
+      effectiveResult(a!, aResolve),
       aResolve,
     );
     const status: ChangeKind =
