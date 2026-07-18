@@ -4,17 +4,21 @@
 
 import type { TypeNode } from "../pipeline/ir/types.ts";
 import { exampleFor, formatType, objectFields, schemaReferenceUrl } from "../lib/typeref.ts";
+import { directionBadge, type MethodMatch } from "../lib/methods.ts";
 
 export function TypeDetail({
   type,
   version,
   accent,
+  method,
   lookup,
   onSelectType,
 }: {
   type: TypeNode;
   version: string;
   accent: string;
+  /** Set when this type takes part in a JSON-RPC method (request/params/result). */
+  method?: MethodMatch;
   lookup: (name: string) => TypeNode | undefined;
   /** Follow a field's referenced type — keeps navigation inside the panel. */
   onSelectType: (name: string) => void;
@@ -61,6 +65,10 @@ export function TypeDetail({
       >
         Official schema reference ↗
       </a>
+
+      {method ? (
+        <MethodSection match={method} current={type.name} onSelectType={onSelectType} />
+      ) : null}
 
       {fields && fields.length > 0 ? (
         <section style={{ marginTop: 16 }}>
@@ -118,6 +126,67 @@ export function TypeDetail({
         </pre>
       </section>
     </aside>
+  );
+}
+
+function MethodSection({
+  match,
+  current,
+  onSelectType,
+}: {
+  match: MethodMatch;
+  current: string;
+  onSelectType: (name: string) => void;
+}) {
+  const { method } = match;
+  const badge = directionBadge(method.direction);
+  const primaryRole = method.messageType === "request" ? "Request" : "Notification";
+  const triad = [
+    { role: primaryRole, name: method.typeName },
+    method.paramsType ? { role: "Params", name: method.paramsType } : undefined,
+    method.resultType ? { role: "Result", name: method.resultType } : undefined,
+  ].filter((x): x is { role: string; name: string } => x !== undefined);
+
+  return (
+    <section style={{ marginTop: 16 }}>
+      <h2 style={sectionHeading}>Method</h2>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          flexWrap: "wrap",
+          marginBottom: 10,
+        }}
+      >
+        <code style={{ fontFamily: "ui-monospace, monospace", fontSize: 13, color: "#e2e8f0" }}>
+          {method.method}
+        </code>
+        <span
+          style={{
+            fontSize: 11,
+            color: badge.color,
+            border: `1px solid ${badge.color}`,
+            borderRadius: 4,
+            padding: "1px 6px",
+          }}
+        >
+          {badge.label}
+        </span>
+      </div>
+      {triad.map(({ role, name }) => (
+        <div key={role} style={{ display: "flex", gap: 8, fontSize: 12, marginBottom: 4 }}>
+          <span style={{ color: "#64748b", width: 84, flexShrink: 0 }}>{role}</span>
+          {name === current ? (
+            <span style={{ fontWeight: 600 }}>{name}</span>
+          ) : (
+            <button onClick={() => onSelectType(name)} style={refButton(badge.color)}>
+              {name}
+            </button>
+          )}
+        </div>
+      ))}
+    </section>
   );
 }
 

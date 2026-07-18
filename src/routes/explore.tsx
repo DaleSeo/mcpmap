@@ -16,6 +16,7 @@ import "@xyflow/react/dist/style.css";
 import { areaSubgraph, neighborhood, type GraphNode } from "../lib/graph.ts";
 import { layout, NODE_HEIGHT, NODE_WIDTH } from "../lib/layout.ts";
 import { DEFAULT_VERSION, isVersion, loadArtifact, VERSIONS } from "../lib/data.ts";
+import { methodForType } from "../lib/methods.ts";
 import { TypeDetail } from "../components/TypeDetail.tsx";
 
 /**
@@ -317,6 +318,7 @@ function Explore() {
           type={focusedType}
           version={artifact.version}
           accent={areaColor(artifact.areaOf[focusedType.name] ?? area)}
+          method={methodForType(artifact.methods, focusedType.name)}
           lookup={(name) => typeIndex.get(name)}
           onSelectType={setFocus}
         />
