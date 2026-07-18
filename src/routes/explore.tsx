@@ -16,6 +16,7 @@ import "@xyflow/react/dist/style.css";
 import { areaSubgraph, neighborhood, type GraphNode } from "../lib/graph.ts";
 import { layout, NODE_HEIGHT, NODE_WIDTH } from "../lib/layout.ts";
 import { DEFAULT_VERSION, isVersion, loadArtifact, VERSIONS } from "../lib/data.ts";
+import { TypeDetail } from "../components/TypeDetail.tsx";
 
 /**
  * Every view coordinate lives in the URL: version, selected feature area, and
@@ -56,7 +57,8 @@ const AREA_COLOR: Record<string, string> = {
   common: "#94a3b8",
 };
 
-const areaColor = (area: string) => AREA_COLOR[area] ?? AREA_COLOR.common;
+const COMMON_COLOR = "#94a3b8";
+const areaColor = (area: string): string => AREA_COLOR[area] ?? COMMON_COLOR;
 
 // React Flow requires node data to be an index-signature record.
 type TypeNodeData = GraphNode & { focused: boolean; [key: string]: unknown };
@@ -174,6 +176,12 @@ function Explore() {
     () => (focus ? neighborhood(artifact, focus, 2) : areaSubgraph(artifact, area)),
     [artifact, area, focus],
   );
+
+  const typeIndex = useMemo(
+    () => new Map(artifact.types.map((t) => [t.name, t])),
+    [artifact.types],
+  );
+  const focusedType = focus ? typeIndex.get(focus) : undefined;
 
   const [nodes, setNodes] = useState<FlowNode[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
@@ -303,6 +311,16 @@ function Explore() {
           </div>
         )}
       </div>
+
+      {focusedType ? (
+        <TypeDetail
+          type={focusedType}
+          version={artifact.version}
+          accent={areaColor(artifact.areaOf[focusedType.name] ?? area)}
+          lookup={(name) => typeIndex.get(name)}
+          onSelectType={setFocus}
+        />
+      ) : null}
     </main>
   );
 }
