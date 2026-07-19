@@ -3,7 +3,19 @@
 // click can open the typed payload for the selected version. Styling is kept
 // simple and self-contained so the future concept-sim engine can share it.
 
-import type { FlowActor, FlowStep } from "../lib/flows.ts";
+// Minimal shapes so the renderer serves both message flows and the auth dance.
+export interface Lane {
+  id: string;
+  label: string;
+}
+export interface SequenceStep {
+  from: string;
+  to: string;
+  label: string;
+  /** Drives arrow styling: solid request, muted result, dashed async. */
+  message: "request" | "result" | "notification";
+  optional?: boolean;
+}
 
 const LANE_WIDTH = 220;
 const MARGIN_X = 24;
@@ -18,8 +30,8 @@ export function FlowDiagram({
   selected,
   onSelect,
 }: {
-  actors: FlowActor[];
-  steps: FlowStep[];
+  actors: Lane[];
+  steps: SequenceStep[];
   selected: number | null;
   onSelect: (index: number) => void;
 }) {
