@@ -238,9 +238,16 @@ function Explore() {
         <Link
           to="/flows"
           search={{ v: search.v }}
-          style={{ color: "#0ea5e9", fontSize: 12, display: "block", marginBottom: 12 }}
+          style={{ color: "#0ea5e9", fontSize: 12, display: "block", marginBottom: 4 }}
         >
           Message flows →
+        </Link>
+        <Link
+          to="/auth"
+          search={{}}
+          style={{ color: "#0ea5e9", fontSize: 12, display: "block", marginBottom: 12 }}
+        >
+          Authorization →
         </Link>
 
         <label style={{ fontSize: 12, color: "#94a3b8", display: "block", marginBottom: 16 }}>
