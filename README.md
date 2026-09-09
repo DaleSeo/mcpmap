@@ -25,6 +25,9 @@ at build time — never hand-drawn — so it cannot drift from the spec.
 mcpmap is an unofficial community project and is not affiliated with the Model
 Context Protocol project or Anthropic.
 
+Schema updates are checked weekly and proposed as manually reviewed PRs.
+See [upstream schema tracking](docs/upstream-schemas.md) for setup and local commands.
+
 ## License
 
 [MIT](LICENSE)

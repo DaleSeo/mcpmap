@@ -5,7 +5,7 @@
 // automatically by the weekly tracking bot. Everything is pinned to a single
 // commit and recorded in manifest.json for reproducibility and drift detection.
 
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -21,7 +21,6 @@ import {
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 export const SCHEMAS_DIR = join(HERE, "schemas");
-const MANIFEST_PATH = join(SCHEMAS_DIR, "manifest.json");
 
 export interface VersionEntry {
   /** Version id, e.g. "2025-11-25" or "draft". */
@@ -84,20 +83,27 @@ async function fetchSchema(commit: string, version: string): Promise<string> {
 export async function fetchAll(
   branch = DEFAULT_BRANCH,
   now = new Date().toISOString(),
+  schemasDir = SCHEMAS_DIR,
 ): Promise<Manifest> {
+  const manifestPath = join(schemasDir, "manifest.json");
+  let previous: Manifest | undefined;
+  try {
+    previous = JSON.parse(await readFile(manifestPath, "utf8")) as Manifest;
+  } catch (error) {
+    if (!(error instanceof Error && "code" in error && error.code === "ENOENT")) throw error;
+  }
   const commit = await resolveCommit(branch);
   const versions = await discoverVersions(commit);
 
   const entries: VersionEntry[] = [];
+  const snapshots: { version: string; pretty: string }[] = [];
   for (const version of versions) {
     const raw = await fetchSchema(commit, version);
     // Re-serialize through JSON.parse so snapshots are canonically formatted and
     // stable regardless of upstream whitespace.
     const parsed = JSON.parse(raw) as unknown;
     const pretty = `${JSON.stringify(parsed, null, 2)}\n`;
-    const dir = join(SCHEMAS_DIR, version);
-    await mkdir(dir, { recursive: true });
-    await writeFile(join(dir, SCHEMA_FILE), pretty);
+    snapshots.push({ version, pretty });
     entries.push({
       version,
       path: `${SCHEMA_DIR}/${version}/${SCHEMA_FILE}`,
@@ -106,9 +112,19 @@ export async function fetchAll(
     console.log(`fetched ${version} (${(pretty.length / 1024).toFixed(0)} KB)`);
   }
 
+  if (previous && JSON.stringify(previous.versions) === JSON.stringify(entries)) {
+    console.log("Schemas unchanged; keeping the existing upstream pin.");
+    return previous;
+  }
+
+  for (const { version, pretty } of snapshots) {
+    const dir = join(schemasDir, version);
+    await mkdir(dir, { recursive: true });
+    await writeFile(join(dir, SCHEMA_FILE), pretty);
+  }
   const manifest: Manifest = { commit, fetchedAt: now, versions: entries };
-  await mkdir(SCHEMAS_DIR, { recursive: true });
-  await writeFile(MANIFEST_PATH, `${JSON.stringify(manifest, null, 2)}\n`);
+  await mkdir(schemasDir, { recursive: true });
+  await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
   console.log(`\npinned to ${commit.slice(0, 10)} · ${entries.length} versions`);
   return manifest;
 }

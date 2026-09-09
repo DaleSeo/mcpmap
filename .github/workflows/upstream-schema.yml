@@ -1,0 +1,72 @@
+name: Track upstream schemas
+
+on:
+  schedule:
+    - cron: "23 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: upstream-schema
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - name: Fetch upstream schemas
+        id: fetch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bun run pipeline:fetch
+          if git diff --quiet -- src/pipeline/schemas/manifest.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Regenerate bundles and IR snapshots
+        if: steps.fetch.outputs.changed == 'true'
+        run: |
+          bun run pipeline:build
+          bun run test -- src/pipeline/pipeline.test.ts --update
+          bun run format
+      - name: Validate generated changes
+        if: steps.fetch.outputs.changed == 'true'
+        run: |
+          bun run format:check
+          bun run lint
+          bun run build
+          bun run typecheck
+          bun run test
+      - name: Open or update a draft PR
+        uses: peter-evans/create-pull-request@v8
+        with:
+          branch: bot/upstream-schemas
+          base: main
+          draft: always-true
+          commit-message: "chore: refresh upstream MCP schemas"
+          title: "chore: refresh upstream MCP schemas"
+          body: |
+            Refreshes the pinned upstream MCP schemas, generated bundles, and IR snapshots.
+
+            Review new versions, feature-area mappings, message-flow coverage, and
+            snapshot changes before merging. This PR is never merged automatically.
+
+            Mark this draft ready for review to run PR checks. Bot updates return it
+            to draft so checks can run again for the new commit.
+
+            Tracking: #25
+          add-paths: |
+            src/pipeline/schemas/**
+            src/data/**
+            src/pipeline/pipeline.test.ts
+            src/pipeline/__snapshots__/**
