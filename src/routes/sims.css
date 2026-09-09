@@ -1,0 +1,215 @@
+.sims {
+  box-sizing: border-box;
+  background: #020617;
+  color: #e2e8f0;
+  font-family: system-ui, sans-serif;
+  min-height: 100dvh;
+  padding: 28px max(20px, calc((100vw - 1100px) / 2));
+}
+.sims * {
+  box-sizing: border-box;
+}
+.sims nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+.sims a {
+  color: #38bdf8;
+}
+.sims header {
+  margin: 48px 0 28px;
+  max-width: 740px;
+}
+.sims h1 {
+  font-size: clamp(28px, 5vw, 44px);
+  margin: 8px 0 16px;
+  line-height: 1.1;
+}
+.sims h2 {
+  font-size: 19px;
+  margin: 0 0 12px;
+}
+.sims p {
+  color: #94a3b8;
+  line-height: 1.6;
+}
+.sims .sim-eyebrow {
+  color: #38bdf8;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 12px;
+}
+.sim-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 24px;
+  padding: 24px;
+  background: #0b1120;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+}
+.sim-controls label > span {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+.sim-controls output {
+  color: #38bdf8;
+  font-variant-numeric: tabular-nums;
+}
+.sims input[type="range"] {
+  width: 100%;
+  accent-color: #38bdf8;
+}
+.sims input[type="number"] {
+  width: 100%;
+  background: #020617;
+  border: 1px solid #475569;
+  color: #e2e8f0;
+  padding: 8px;
+  border-radius: 6px;
+}
+.sim-transport {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 24px 0;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.sims button {
+  cursor: pointer;
+  padding: 10px 16px;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  background: #0f172a;
+  color: #e2e8f0;
+  font: inherit;
+}
+.sims button.sim-primary {
+  background: #38bdf8;
+  border-color: #38bdf8;
+  color: #020617;
+  min-width: 80px;
+  font-weight: 600;
+}
+.sims button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.sims :focus-visible {
+  outline: 2px solid #f8fafc;
+  outline-offset: 4px;
+}
+.sim-seek {
+  display: block;
+  color: #94a3b8;
+  font-size: 12px;
+  margin-bottom: 24px;
+}
+.sim-seek input {
+  display: block;
+  margin-top: 12px;
+}
+.sim-pools {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.sim-pool,
+.sim-chart {
+  background: #0b1120;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  padding: 24px;
+}
+.sim-pool {
+  border-top-width: 3px;
+}
+.sim-pool p {
+  font-size: 13px;
+  min-height: 40px;
+}
+.sim-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin: 24px 0;
+  color: #94a3b8;
+  font-size: 12px;
+}
+.sim-metrics strong {
+  display: block;
+  color: #f8fafc;
+  font-size: 28px;
+  font-variant-numeric: tabular-nums;
+}
+.sim-server {
+  margin: 20px 0;
+}
+.sim-server > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+  margin-bottom: 8px;
+  font-variant-numeric: tabular-nums;
+}
+.sim-server > div > span:last-child {
+  color: #94a3b8;
+}
+.sim-meter {
+  height: 9px;
+  background: #1e293b;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.sim-meter > div {
+  height: 100%;
+}
+.sim-pool small {
+  color: #94a3b8;
+  font-size: 11px;
+}
+.sim-chart {
+  margin-top: 24px;
+}
+.sim-chart h2 span {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: normal;
+}
+.sim-chart p {
+  font-size: 13px;
+}
+.sim-chart svg {
+  width: 100%;
+  display: block;
+}
+.sim-chart text {
+  fill: #94a3b8;
+  font-size: 11px;
+}
+.sim-notes {
+  max-width: 820px;
+  margin: 40px 0;
+  font-size: 13px;
+}
+@media (max-width: 650px) {
+  .sim-pools {
+    grid-template-columns: 1fr;
+  }
+  .sim-pool,
+  .sim-chart,
+  .sim-controls {
+    padding: 16px;
+  }
+  .sim-chart h2 span {
+    display: block;
+    margin-top: 8px;
+  }
+}

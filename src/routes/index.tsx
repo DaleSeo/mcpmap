@@ -6,6 +6,13 @@ export const Route = createFileRoute("/")({
 
 const PATHS = [
   {
+    audience: "Exploring the concepts",
+    blurb:
+      "Send the same traffic through sticky sessions and stateless routing. Watch queues and throughput change.",
+    to: "/sims" as const,
+    cta: "Try the routing simulation",
+  },
+  {
     audience: "New to MCP",
     blurb:
       "See the shape of the protocol — types clustered by feature area, one click to a type's neighborhood.",
