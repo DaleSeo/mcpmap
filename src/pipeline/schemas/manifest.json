@@ -1,6 +1,6 @@
 {
-  "commit": "26897cc322f356487da89113451bd16b520b9288",
-  "fetchedAt": "2026-07-18T13:30:11.731Z",
+  "commit": "ab3a39c13bd23be691c2760e1c6c5c15a64582e1",
+  "fetchedAt": "2026-09-28T17:44:23.785Z",
   "versions": [
     {
       "version": "2024-11-05",
@@ -15,17 +15,22 @@
     {
       "version": "2025-06-18",
       "path": "schema/2025-06-18/schema.json",
-      "sha256": "0da331735b91eab8bc2226bc1401fd11c5aa8944e4c35668c8910fb1c3edb9a7"
+      "sha256": "26ec2d3b2455c1fc3d1ea2a5f41d94eba4a6970b74b5f7d0146d9ed2b2e9995a"
     },
     {
       "version": "2025-11-25",
       "path": "schema/2025-11-25/schema.json",
-      "sha256": "fa21f0c631eeb6aca05f15a29973785e222018b64f0be90108f00654aca0c384"
+      "sha256": "46269f9d4bfca174e7f8b1eb1bbc8d05452176f45a8c05e619c36db342e09bfd"
+    },
+    {
+      "version": "2026-07-28",
+      "path": "schema/2026-07-28/schema.json",
+      "sha256": "14d68853dec1cf9cd64fb801caf34b2dcb94ee88f91fb487581381e89845125c"
     },
     {
       "version": "draft",
       "path": "schema/draft/schema.json",
-      "sha256": "9774477d8d0fbd5a45f13b8a200749cdb536426112d5f671fc2736b7a314b20b"
+      "sha256": "14d68853dec1cf9cd64fb801caf34b2dcb94ee88f91fb487581381e89845125c"
     }
   ]
 }
