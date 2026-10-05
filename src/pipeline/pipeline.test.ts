@@ -58,6 +58,7 @@ describe("pipeline IR", () => {
     expect(versions).toMatchInlineSnapshot(`
       [
         "draft",
+        "2026-07-28",
         "2025-11-25",
         "2025-06-18",
         "2025-03-26",
