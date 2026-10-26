@@ -735,6 +735,162 @@ exports[`pipeline IR > 2025-11-25 > matches the shape summary snapshot 1`] = `
 }
 `;
 
+exports[`pipeline IR > 2026-07-28 > matches the shape summary snapshot 1`] = `
+{
+  "capabilities": [
+    "client:elicitation",
+    "client:experimental",
+    "client:extensions",
+    "client:roots",
+    "client:sampling",
+    "server:completions",
+    "server:experimental",
+    "server:extensions",
+    "server:logging",
+    "server:prompts",
+    "server:resources",
+    "server:tools",
+  ],
+  "dialect": "2020-12",
+  "methods": [
+    {
+      "direction": "clientToServer",
+      "messageType": "request",
+      "method": "completion/complete",
+      "resultType": "CompleteResult",
+    },
+    {
+      "direction": "serverToClient",
+      "messageType": "request",
+      "method": "elicitation/create",
+      "resultType": "ElicitResult",
+    },
+    {
+      "direction": "serverToClient",
+      "messageType": "notification",
+      "method": "notifications/cancelled",
+      "resultType": undefined,
+    },
+    {
+      "direction": "serverToClient",
+      "messageType": "notification",
+      "method": "notifications/message",
+      "resultType": undefined,
+    },
+    {
+      "direction": "serverToClient",
+      "messageType": "notification",
+      "method": "notifications/progress",
+      "resultType": undefined,
+    },
+    {
+      "direction": "serverToClient",
+      "messageType": "notification",
+      "method": "notifications/prompts/list_changed",
+      "resultType": undefined,
+    },
+    {
+      "direction": "serverToClient",
+      "messageType": "notification",
+      "method": "notifications/resources/list_changed",
+      "resultType": undefined,
+    },
+    {
+      "direction": "serverToClient",
+      "messageType": "notification",
+      "method": "notifications/resources/updated",
+      "resultType": undefined,
+    },
+    {
+      "direction": "serverToClient",
+      "messageType": "notification",
+      "method": "notifications/subscriptions/acknowledged",
+      "resultType": undefined,
+    },
+    {
+      "direction": "serverToClient",
+      "messageType": "notification",
+      "method": "notifications/tools/list_changed",
+      "resultType": undefined,
+    },
+    {
+      "direction": "clientToServer",
+      "messageType": "request",
+      "method": "prompts/get",
+      "resultType": "GetPromptResult",
+    },
+    {
+      "direction": "clientToServer",
+      "messageType": "request",
+      "method": "prompts/list",
+      "resultType": "ListPromptsResult",
+    },
+    {
+      "direction": "clientToServer",
+      "messageType": "request",
+      "method": "resources/list",
+      "resultType": "ListResourcesResult",
+    },
+    {
+      "direction": "clientToServer",
+      "messageType": "request",
+      "method": "resources/read",
+      "resultType": "ReadResourceResult",
+    },
+    {
+      "direction": "clientToServer",
+      "messageType": "request",
+      "method": "resources/templates/list",
+      "resultType": "ListResourceTemplatesResult",
+    },
+    {
+      "direction": "serverToClient",
+      "messageType": "request",
+      "method": "roots/list",
+      "resultType": "ListRootsResult",
+    },
+    {
+      "direction": "serverToClient",
+      "messageType": "request",
+      "method": "sampling/createMessage",
+      "resultType": "CreateMessageResult",
+    },
+    {
+      "direction": "clientToServer",
+      "messageType": "request",
+      "method": "server/discover",
+      "resultType": "DiscoverResult",
+    },
+    {
+      "direction": "clientToServer",
+      "messageType": "request",
+      "method": "subscriptions/listen",
+      "resultType": "SubscriptionsListenResult",
+    },
+    {
+      "direction": "clientToServer",
+      "messageType": "request",
+      "method": "tools/call",
+      "resultType": "CallToolResult",
+    },
+    {
+      "direction": "clientToServer",
+      "messageType": "request",
+      "method": "tools/list",
+      "resultType": "ListToolsResult",
+    },
+  ],
+  "typeCount": 155,
+  "typesByKind": {
+    "alias": 3,
+    "enum": 2,
+    "object": 131,
+    "scalar": 2,
+    "union": 17,
+  },
+}
+`;
+
 exports[`pipeline IR > draft > matches the shape summary snapshot 1`] = `
 {
   "capabilities": [
@@ -880,11 +1036,11 @@ exports[`pipeline IR > draft > matches the shape summary snapshot 1`] = `
       "resultType": "ListToolsResult",
     },
   ],
-  "typeCount": 154,
+  "typeCount": 155,
   "typesByKind": {
     "alias": 3,
     "enum": 2,
-    "object": 130,
+    "object": 131,
     "scalar": 2,
     "union": 17,
   },
